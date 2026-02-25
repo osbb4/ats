@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>ATS 1 — Settings</title><style>:root{--panel-max:520px;--page-pad:clamp(10px,3vw,24px);--pad:clamp(12px,2.5vw,20px);--border:1px;--radius:12px;--gap:clamp(8px,2vw,18px);--btn-h:clamp(52px,10vw,64px);--sep:rgba(0,0,0,.35);--label-font:clamp(17px,2.6vw,17px);--btn-font:calc(var(--label-font) + 2px);--icon-font:clamp(28px,7vw,40px)}*,*::before,*::after{box-sizing:border-box}html,body{margin:0}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;background:#fff;padding:var(--page-pad);text-align:center;overflow-x:hidden}button,input,select,textarea{font:inherit}button{-webkit-appearance:none;appearance:none}.panel{width:100%;max-width:var(--panel-max);margin:16px auto;padding:var(--pad);/*border:var(--border) solid #000;border-radius:var(--radius)*/}.panel-head{position:relative;display:flex;align-items:center;justify-content:center;min-height:52px;margin:0 0 10px;width:100%}.panel-head .section-title{margin:0}.panel-head__btn{position:absolute;right:0;top:50%;transform:translateY(-50%);min-width:52px;min-height:52px;padding:6px}.section-title{font-weight:700;font-size:var(--label-font);line-height:1.05;text-align:center;margin:0 0 10px}.section-sep{height:1px;background:var(--sep);margin:0 0 16px}.sub-title{font-weight:700;font-size:var(--label-font);line-height:1.05;text-align:center;margin:10px 0 12px}.ctrl-btn{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:var(--btn-h);padding:10px 12px;border:1px solid #888;border-radius:12px;background:linear-gradient(#f2f2f2,#e2e2e2);box-shadow:none;transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;font-weight:700;font-size:var(--btn-font);line-height:1.15;gap:8px;cursor:pointer;color:#000;-webkit-text-fill-color:currentColor}.ctrl-btn.inactive{border-color:#ddd;cursor:not-allowed;pointer-events:none;background:#fff;box-shadow:none}.ctrl-btn:not(.inactive):active{filter:brightness(.98)}.panel-head__btn:not(.inactive):active{filter:brightness(.98)}.ctrl-btn--icon{gap:0;min-width:56px;min-height:56px;padding:6px 10px}.ctrl-btn .icon{font-size:var(--icon-font);line-height:1;display:block;transform:translateY(1px)}form{text-align:left}.form-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:0 0 16px}.form-grid label{font-weight:600;font-size:var(--label-font);line-height:1.2;text-align:left;color:rgba(0,0,0,.72)}input[type=number],input[type=date],input[type=time],input[type=text]{width:100%;padding:14px 16px;border:1px solid #888;border-radius:12px;background:#fff;color:#000;font-weight:700;font-size:var(--btn-font);line-height:1.15;-webkit-text-fill-color:currentColor}.checkbox-row{display:flex;align-items:center;gap:12px;font-weight:800;font-size:clamp(18px,5vw,26px);margin:4px 0 14px}.checkbox-row input[type=checkbox]{width:28px;height:28px;flex:0 0 auto}.actions{display:flex;gap:var(--gap);justify-content:center;align-items:stretch;margin-top:18px}.actions .ctrl-btn{flex:1 1 0;min-width:0}@media (max-width:520px){.actions{flex-direction:column;align-items:stretch}.actions .ctrl-btn{flex:0 0 auto;width:100%}}
+/* --- Interface color picker --- */
+.color-picker{display:flex;align-items:center;gap:12px;width:100%}
+.color-picker select{
+  flex:1 1 auto;
+  min-width:0;
+  width:100%;
+  padding:14px 16px;
+  border:1px solid #888;
+  border-radius:12px;
+  background:#fff;
+  color:#000;
+  font-weight:700;
+  font-size:var(--btn-font);
+  line-height:1.15;
+  -webkit-text-fill-color:currentColor;
+}
+.color-picker select:focus{outline:none;box-shadow:0 0 0 2px rgba(0,0,0,.08)}
+.color-swatch{
+  width:26px;
+  height:26px;
+  border-radius:9px;
+  border:1px solid rgba(0,0,0,.22);
+  background:var(--accent,#2E7D32);
+  flex:0 0 auto;
+}
+/* iOS: make <select> look like other inputs */
+.color-picker{
+  position: relative;
+}
+
+.color-picker select{
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  padding-right: 56px;           /* місце під нашу стрілку */
+}
+
+/* приховати стрілку в старих Edge/IE (не завадить) */
+.color-picker select::-ms-expand{ display:none; }
+
+/* Наша “стрілка” справа по центру */
+.color-picker::after{
+  content:"";
+  position:absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  opacity: .9;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
+
+}
+</style></head>
+<body>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="section-title">Налаштування</div>
+      <button class="ctrl-btn ctrl-btn--icon panel-head__btn" type="button" onclick="location.href='/'">
+        <span class="icon" aria-hidden="true">↩</span>
+      </button>
+    </div>
+
+    <div class="section-sep"></div>
+
+    <form method="POST" action="/save">
+
+      <div class="sub-title">Автоматизація</div>
+
+      <div class="form-grid">
+        <label for="d_on">Затримка підключення навантаження після запуску генератора (сек):</label>
+        <input id='d_on' type='number' min='0' max='600' name='d_on' value='420'>
+
+        <label for="d_off">Затримка вимкнення генератора після відключення навантаженя (сек):</label>
+        <input id='d_off' type='number' min='0' max='600' name='d_off' value='240'>
+      </div>
+
+      <div class="sub-title">Імітація кнопок АВР</div>
+
+      <div class="form-grid">
+        <label for="pulse">Тривалість натискання (мсек):</label>
+        <input id='pulse' name='pulse' type='number' min='1' max='10000' required value='2000'>
+      </div>
+
+
+      <div class="sub-title">Локальна і	дентифікація</div>
+      <div class="form-grid">
+        <label for="pulse">Назва системи:</label>
+        <input id='sysname' name='sysname' type='text' required value='ATS 1'>
+      </div>
+
+      <div class="form-grid">
+        <label for="pulse">URL сторінки контролера:</label>
+        <input id='fqdn' name='fqdn' type='text' required value='https://ats1.las.net.ua'>
+      </div>
+      <div class="sub-title">Інтерфейс</div>
+      <div class="form-grid">
+        <label for="setup_no">Колір інтерфейсу:</label>
+        <div class="color-picker">
+          <select id="setupNo" name="setup_no">
+			  <option value="1">Червоний</option>
+			  <option value="2">Синій</option>
+			  <option value="3">Зелений</option>
+			  <option value="4">Фіолетовий</option>
+			  <option value="5">Помаранчевий</option>
+			  <option value="6">Бірюзовий</option>
+			  <option value="7">Пурпуровий</option>
+			  <option value="8">Темно-сірий</option>
+		  </select>
+		<span class="color-swatch" id="colorSwatch" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="submit" class="ctrl-btn">Зберегти</button>
+      </div>
+    </form>
+  </div>
+<script>
+window.CURRENT_SETUP_NO = 7; // тут значення з серверу
+const THEMES = [
+  { accent: "#C62828" }, // 1 — Червоний
+  { accent: "#1565C0" }, // 2 — Синій
+  { accent: "#2E7D32" }, // 3 — Зелений
+  { accent: "#6A1B9A" }, // 4 — Фіолетовий
+  { accent: "#EF6C00" }, // 5 — Помаранчевий
+  { accent: "#00838F" }, // 6 — Бірюзовий
+  { accent: "#AD1457" }, // 7 — Магента
+  { accent: "#37474F" }, // 8 — Темно-сірий
+];
+
+function clampSetupNo(v){
+  const n = parseInt(v, 10);
+  if (!Number.isFinite(n)) return 1;
+  return Math.min(Math.max(n, 1), THEMES.length);
+}
+
+function applySwatchFromSetupNo(setupNo){
+  const n = clampSetupNo(setupNo);
+  const c = THEMES[n - 1].accent;
+
+  const sw = document.getElementById("colorSwatch");
+  if (sw) sw.style.background = c;
+}
+
+function getInitialSetupNo(){
+  // 1) value injected by server (optional)
+  if (typeof window.CURRENT_SETUP_NO !== "undefined") return clampSetupNo(window.CURRENT_SETUP_NO);
+
+  // 2) query string: ?setup_no=3
+  const qs = new URLSearchParams(window.location.search);
+  if (qs.has("setup_no")) return clampSetupNo(qs.get("setup_no"));
+  if (qs.has("setupNo")) return clampSetupNo(qs.get("setupNo"));
+  if (qs.has("setup")) return clampSetupNo(qs.get("setup"));
+
+  // 3) last user choice (fallback)
+  const stored = localStorage.getItem("setup_no");
+  if (stored) return clampSetupNo(stored);
+
+  return 1;
+}
+
+const setupSel = document.getElementById("setupNo");
+if (setupSel){
+  // set initial value (from server/query/localStorage)
+  const init = getInitialSetupNo();
+  setupSel.value = String(init);
+
+  applySwatchFromSetupNo(setupSel.value);
+
+  setupSel.addEventListener("change", () => {
+    applySwatchFromSetupNo(setupSel.value);
+    localStorage.setItem("setup_no", setupSel.value);
+  });
+}
+</script>
+</body>
+</html>

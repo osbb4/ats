@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>ATS 1 — Розклад сценаріїв</title>
+<style>:root{--panel-max:520px;--page-pad:clamp(10px,3vw,24px);--pad:clamp(12px,2.5vw,20px);--border:1px;--radius:12px;--gap:clamp(8px,2vw,18px);--btn-h:clamp(52px,10vw,64px);--sep:rgba(0,0,0,.35);--label-font:clamp(17px,2.6vw,17px);--btn-font:calc(var(--label-font) + 2px);--icon-font:clamp(28px,7vw,40px)}*,*::before,*::after{box-sizing:border-box}html,body{margin:0}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;background:#fff;padding:var(--page-pad);text-align:center;overflow-x:hidden}button,input,select,textarea{font:inherit}button{-webkit-appearance:none;appearance:none}.panel{width:100%;max-width:var(--panel-max);margin:16px auto;padding:var(--pad);/*border:var(--border) solid #000;border-radius:var(--radius)}*/.panel-head{position:relative;display:flex;align-items:center;justify-content:center;min-height:52px;margin:0 0 10px;width:100%}.panel-head .section-title{margin:0}.panel-head__btn{position:absolute;right:0;top:50%;transform:translateY(-50%);min-width:52px;min-height:52px;padding:6px}.section-title{font-weight:700;font-size:var(--label-font);line-height:1.05;text-align:center;margin:0 0 10px}.section-sep{height:1px;background:var(--sep);margin:0 0 16px}.sub-title{font-weight:700;font-size:var(--label-font);line-height:1.05;text-align:center;margin:10px 0 12px}.ctrl-btn{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:var(--btn-h);padding:10px 12px;border:1px solid #888;border-radius:12px;background:linear-gradient(#f2f2f2,#e2e2e2);box-shadow:none;transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;font-weight:700;font-size:var(--btn-font);line-height:1.15;gap:8px;cursor:pointer;color:#000;-webkit-text-fill-color:currentColor}.ctrl-btn.inactive{border-color:#ddd;cursor:not-allowed;pointer-events:none;background:#fff;box-shadow:none}.ctrl-btn:not(.inactive):active{filter:brightness(.98)}.panel-head__btn:not(.inactive):active{filter:brightness(.98)}.ctrl-btn--icon{gap:0;min-width:56px;min-height:56px;padding:6px 10px}.ctrl-btn .icon{font-size:var(--icon-font);line-height:1;display:block;transform:translateY(1px)}form{text-align:left}.form-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:0 0 16px}.form-grid label{font-weight:600;font-size:var(--label-font);line-height:1.2;text-align:left;color:rgba(0,0,0,.72)}input[type=number],input[type=date],input[type=time],input[type=text]{width:100%;max-width:100%;min-width:0;display:block;padding:14px 16px;border:1px solid #888;border-radius:12px;background:#fff;color:#000;font-weight:700;font-size:var(--btn-font);line-height:1.15;-webkit-text-fill-color:currentColor;}
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none}
+.checkbox-row{display:flex;align-items:center;gap:12px;font-weight:800;font-size:clamp(18px,5vw,26px);margin:4px 0 14px}.checkbox-row input[type=checkbox]{width:28px;height:28px;flex:0 0 auto}.actions{display:flex;gap:var(--gap);justify-content:center;align-items:stretch;margin-top:18px}.actions .ctrl-btn{flex:1 1 0;min-width:0}@media (max-width:520px){.actions{flex-direction:column;align-items:stretch}.actions .ctrl-btn{flex:0 0 auto;width:100%}}
+
+/* 1) Чекбокси: зробити текст як у значень date/time */
+.checkbox-row{
+  /* було: font-size: clamp(18px,5vw,26px); */
+  font-size: var(--btn-font);
+  font-weight: 700;           /* щоб візуально збігалось з інпутами */
+  line-height: 1.15;
+  margin: 4px 0 14px;
+}
+
+/* (опційно) щоб чекбокс не виглядав “дитячим” поруч з меншим текстом */
+.checkbox-row input[type=checkbox]{
+  width: 24px;
+  height: 24px;
+}
+
+/* 2) Нижні кнопки: в один рядок горизонтально */
+.panel-settings{margin-top:18px;display:flex;gap:var(--gap);justify-content:stretch;align-items:stretch;padding:0;width:100%}
+
+.panel-settings .ctrl-btn{flex:1 1 0;min-width:0;width:100%}
+
+/* 3) “Скасувати”: іконка + текст в ряд */
+#btnCancel{
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* “Запланувати” можна лишити як є, або теж зробити row для однаковості */
+#btnSendSchedule{
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* iOS/Safari: date/time можуть мати внутрішній min-width — підтискаємо */
+input[type=date],input[type=time]{max-width:100%;min-width:0}
+.form-grid{width:100%}
+.panel{overflow:hidden} /* щоб нічого не вилазило за рамку */
+
+
+/* === iOS overflow + buttons always in a row (patch) === */
+.form-grid > *{min-width:0;}
+.panel-settings{flex-direction:row;}
+@media (max-width:520px){.panel-settings{flex-direction:row;}}
+
+
+/* === v8: closer to settings look (CSS-only overrides, keep button styling) === */
+.ctrl-btn{
+  /* keep the original "button" look, not flat white */
+  border:1px solid #888;
+  background:linear-gradient(#f2f2f2,#e2e2e2);
+}
+/* inactive stays flat and lighter */
+.ctrl-btn.inactive{
+  border-color:#ddd;
+  background:#fff;
+}
+/* press effect like in settings */
+.ctrl-btn:not(.inactive):active{
+  transform:translateY(1px);
+  filter:brightness(.98);
+}
+.panel-head__btn:not(.inactive):active{
+  transform:translateY(-50%) translateY(1px);
+  filter:brightness(.98);
+}
+
+</style>
+</head>
+<body>
+<div class="panel">
+<div class="panel-head">
+<div class="section-title">Автоматизація</div>
+<button class="ctrl-btn ctrl-btn--icon panel-head__btn" onclick="location.href='/'" type="button">
+<span aria-hidden="true" class="icon">↩</span>
+</button>
+</div>
+<div class="section-sep"></div>
+<form action="./planner" id="scheduleForm" method="POST">
+<label class="checkbox-row" for="noStartCheckbox">
+<input id="noStartCheckbox" name="no_start" type="checkbox" value="1"/>
+        Не запускати 
+      </label>
+<label class="checkbox-row" for="startOnGridCheckbox">
+<input id="startOnGridCheckbox" name="start_on_grid_down" type="checkbox" value="1"/>
+        Запустити, коли зникне мережа
+      </label>
+<div class="form-grid">
+<label for="start_date">Дата запуску:</label>
+<input id="start_date" name="start_date" type="date" value="2026-02-20"/>
+<label for="start_time">Час запуску:</label>
+<input id="start_time" name="start_time" type="time" value="17:31"/>
+</div>
+<div class="section-sep" style="margin-top:16px;"></div>
+<label class="checkbox-row" for="stopOnGridCheckbox">
+<input id="stopOnGridCheckbox" name="stop_on_grid_up" type="checkbox" value="1"/>
+        Зупинити, коли відновиться мережа
+      </label>
+<div class="form-grid">
+<label for="stop_date">Дата зупинки:</label>
+<input id="stop_date" name="stop_date" type="date" value="2026-02-20"/>
+<label for="stop_time">Час зупинки:</label>
+<input id="stop_time" name="stop_time" type="time" value="19:31"/>
+</div>
+<div class="panel-settings">
+<button aria-label="Запланувати" class="ctrl-btn" id="btnSendSchedule" name="ok" title="Запланувати" type="submit" value="1">
+<span>Запланувати</span>
+</button>
+<button aria-label="Запланувати" class="ctrl-btn" id="btnCancel" name="cancel" title="Запланувати" type="submit" value="1">
+<span aria-hidden="true" class="icon">✖</span>
+<span>Скасувати</span>
+</button>
+</div>
+</form>
+</div>
+<script>(function(){
+  const form = document.getElementById('scheduleForm');
+  if(!form) return;
+
+  const noStart = document.getElementById('noStartCheckbox');
+  const startOnGrid = document.getElementById('startOnGridCheckbox');
+  const startDate = document.getElementById('start_date');
+  const startTime = document.getElementById('start_time');
+
+  const stopOnGrid = document.getElementById('stopOnGridCheckbox');
+  const stopDate = document.getElementById('stop_date');
+  const stopTime = document.getElementById('stop_time');
+
+  function setStartDisabled(isDisabled){
+    if(startDate) startDate.disabled = !!isDisabled;
+    if(startTime) startTime.disabled = !!isDisabled;
+  }
+
+  function applyStartState(){
+    if(!noStart || !startOnGrid) return;
+
+    // Якщо активний будь-який з двох режимів — дати/час не редагуємо
+    // (взаємовиключність забезпечують окремі обробники change нижче)
+    setStartDisabled(!!(noStart.checked || startOnGrid.checked));
+  }
+
+  function setStopDisabled(isDisabled){
+    if(stopDate) stopDate.disabled = !!isDisabled;
+    if(stopTime) stopTime.disabled = !!isDisabled;
+  }
+
+  function applyStopState(){
+    if(!stopOnGrid) return;
+    // Якщо зупинка "по мережі" увімкнена — дату/час не редагуємо
+    setStopDisabled(stopOnGrid.checked);
+  }
+
+  // Default state
+  if(noStart) noStart.checked = true;
+  if(startOnGrid) startOnGrid.checked = false;
+  applyStartState();
+
+  // Default state (Stop)
+  if(stopOnGrid) stopOnGrid.checked = true;
+  applyStopState();
+
+  // Важливо: користувач може увімкнути "Не планувати" навіть коли вже стоїть
+  // "Запускати по мережі". Тому визначаємо пріоритет за тим, що змінювали.
+  noStart && noStart.addEventListener('change', function(){
+    if(!startOnGrid) return;
+    if(noStart.checked){
+      // Вмикаємо режим "Не планувати" -> вимикаємо "по мережі" і блокуємо дату/час
+      startOnGrid.checked = false;
+      setStartDisabled(true);
+    } else {
+      // Зняли "Не планувати" -> якщо "по мережі" не увімкнено, відкриваємо дату/час
+      applyStartState();
+    }
+  });
+
+  startOnGrid && startOnGrid.addEventListener('change', function(){
+    if(!noStart) return;
+    if(startOnGrid.checked){
+      // Вмикаємо "по мережі" -> вимикаємо "Не планувати" і блокуємо дату/час
+      noStart.checked = false;
+      setStartDisabled(true);
+    } else {
+      // Зняли "по мережі" -> якщо "Не планувати" не увімкнено, відкриваємо дату/час
+      applyStartState();
+    }
+  });
+
+  stopOnGrid && stopOnGrid.addEventListener('change', applyStopState);
+
+  // Preserve server-side behavior: ensure disabled inputs are still submitted
+  form.addEventListener('submit', function(){
+    const disabled = form.querySelectorAll('input:disabled, select:disabled, textarea:disabled');
+    disabled.forEach(el => { el.disabled = false; });
+  });
+})();</script></body>
+</html>

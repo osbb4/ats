@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>ATS 1</title>
+<style>
+    :root{
+      --panel-max: 520px;
+      --page-pad: clamp(1px, 3vw, 4px);
+
+      --pad: clamp(12px, 2.5vw, 20px);
+      --border: 1px;
+      --radius: 12px;
+
+      --gap: clamp(8px, 2vw, 18px);
+      --btn-h: clamp(52px, 10vw, 64px);
+      --sep: rgba(0,0,0,.35);
+
+      /* Типографіка */
+      --label-font: clamp(11px, 2.6vw, 14px);          /* GRID / GEN / LOAD / AUTO */
+      --btn-font:   calc(var(--label-font) + 2px);     /* ВСІ кнопки (однаково) */
+
+      /* Іконки (окремо від тексту) */
+      --icon-font:  clamp(28px, 7vw, 40px);
+    
+      --accent: #d11;          /* буде перезаписано з JS */
+      --accent-ink: #fff;      /* колір тексту на акценті */
+    
+    /* ширина “вузьких” кнопок (STOP-any та Planner). Підібрано як ~вдвічі вужче за звичайну) */
+    --mini-btn-w: 72px;    
+
+    }
+
+    *,*::before,*::after{ box-sizing:border-box; }
+    html,body{ margin:0; }
+    html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+
+    body{
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-size:16px;
+      background:#fff;
+      padding:var(--page-pad);
+      text-align:center;
+      overflow-x:hidden;
+    }
+
+    button,input,select,textarea{ font:inherit; }
+    button{ -webkit-appearance:none; appearance:none; }
+
+    :is(.panel, .panel-i, .panel-scn,.planner-layout){
+      width:95%;
+      max-width:var(--panel-max);
+      margin:10px auto;
+      padding:0px;
+    }
+
+    .section-title{
+      font-weight:800;
+      text-align:center;
+      margin:0 0 10px;
+    }
+	.topbar .section-title{margin:0;}
+	.topbar > *{display:flex; align-items:center;}
+
+	  /* ===== Top header row ===== */
+	.topline{
+	  width:100%;
+	  margin:0px;
+	}
+
+	/* One shared colored bar holding setupTitle + nowTime */
+	.topbar{
+	  display:flex;
+	  align-items:center;
+	  justify-content:space-between;
+	  gap:10px;
+	  width:100%;
+	  padding:6px 10px;
+	  border-radius:10px;
+	  background: var(--accent);
+	  color: var(--accent-ink);
+	  -webkit-text-fill-color: currentColor;
+	}
+
+	.topbar #setupTitle{
+	  flex:1 1 auto;
+	  min-width:0;
+	  text-align:left;
+	  font-weight:800;
+	  font-size: var(--btn-font);
+	  line-height:1.1;
+	  white-space:nowrap;
+	  overflow:hidden;
+	  text-overflow:ellipsis;
+	}
+
+	.topbar #nowTime{
+	  flex:0 0 auto;
+	  font-weight:700;
+	  opacity:.88;
+	  font-size: var(--btn-font);
+	  line-height:1.1;
+	  white-space:nowrap;
+	}
+	.pwr-badge{
+	  display:inline-flex;
+	  align-items:center;
+	  justify-content:center;
+	  padding:4px 10px;
+	  border-radius:19px;
+	  font-size: var(--label-font);
+	  font-weight:800;
+	  letter-spacing:.3px;
+	  line-height:1;
+	  border:1px solid rgba(255,255,255,.35);
+	  background: rgba(255,255,255,.18);
+	}
+
+	.pwr-badge.off{
+	  opacity: 1;                          /* щоб було контрастно, без “вицвітання” */
+	  background: rgba(255,255,255,.78);   /* сірий/світлий фон на акцентній полосі */
+	  color: rgba(0,0,0,.88);              /* темний текст */
+	  -webkit-text-fill-color: currentColor;
+	  border-color: rgba(0,0,0,.18);
+	}
+
+	.pwr-badge.on{
+	  opacity:1;
+	}
+	/* INDICATORS */
+	
+	.panel-i  {
+		border:var(--border) solid #000;
+		border-radius:var(--radius);
+		padding:10px;
+
+	}
+	
+    .indicators{
+      display:flex;
+      flex-wrap:nowrap;
+      justify-content:space-between;
+      align-items:stretch;
+      gap:var(--gap);
+    }
+
+    .lamp-box{
+      display:flex;
+      flex:1 1 0;
+      min-width:0;
+      flex-direction:column;
+      align-items:center;
+      padding:12px 0;
+      gap:6px;
+      overflow:hidden;
+    }
+
+    .lamp-label{
+      display:block;
+      max-width:100%;
+      font-weight:700;
+      font-size: var(--label-font);
+      line-height:1.05;
+      text-align:center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .lamp{
+      width:clamp(28px, 7vw, 50px);
+      height:clamp(28px, 7vw, 50px);
+      border:2px solid #555;
+      border-radius:50%;
+      background:#CCC;
+      margin:0 auto;
+      display:block;
+    }
+    .lamp.on{ background:var(--accent); border-color: color-mix(in srgb, var(--accent)45%, #000); }
+
+    .lamp.hidden{ visibility:hidden; }
+
+    #lamp4.lamp{
+      border-radius:8px !important;
+      width:clamp(34px, 8vw, 46px);
+      height:clamp(28px, 7vw, 50px);
+    }
+
+    /* Buttons */
+    .ctrl-btn{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+
+      min-height:var(--btn-h);
+      padding:10px 12px;
+      border:1px solid #888;
+      border-radius:12px;
+      background: linear-gradient(#f2f2f2, #e2e2e2);
+      box-shadow: none;
+      transition: transform .06s ease, box-shadow .06s ease, filter .12s ease;
+
+      font-weight:700;
+      font-size: var(--btn-font);   /* <-- один розмір на всіх кнопках -->*/
+      line-height:1.15;
+      gap:8px;
+
+      cursor:pointer;
+      color:#000;
+      -webkit-text-fill-color:currentColor;
+
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
+
+    /* Keep single-line labels (used in confirm buttons) */
+    .ctrl-btn .btnLine{ white-space:nowrap; }
+
+    .ctrl-btn.active{ background: var(--accent) !important; color: var(--accent-ink) !important; }
+
+    .ctrl-btn.inactive{
+      border-color:#ddd;
+      cursor:not-allowed;
+      pointer-events:none;
+      background:#f9f9f9;
+      box-shadow:none;
+    }
+
+    .ctrl-btn:not(.inactive):active{
+      transform: translateY(1px);
+      box-shadow: none;
+      filter: brightness(.98);
+    }
+  
+  /* press-ефект для хедерних кнопок: зберігаємо translateY(-50%) */
+  .panel-head__btn:not(.inactive):active{
+    transform: translateY(-50%) translateY(1px);
+  }  
+
+    /* dummy */
+    .ctrl-btn--dummy{
+      pointer-events:none;
+      cursor:default;
+      border:1px solid #fff;
+      background:#fff;
+      box-shadow:none;
+    }
+
+
+    /* ATS статус: як GRID (без контуру), не клікається */
+	.ats-btn{
+	  pointer-events:none;
+	  cursor:default;
+	}
+
+	/* OK / NoPwr / Alarm (керуємо колом як у ламп) */
+	#btnATS[data-st="ok"] #lampATS{
+	  background: var(--accent);
+	  border-color: color-mix(in srgb, var(--accent) 45%, #000);
+	  animation:none;
+	}
+	#btnATS[data-st="nopwr"] #lampATS{
+	  background:#999;           /* як GRID off */
+	  border-color:#555;
+	  animation:none;
+	}
+	#btnATS[data-st="alarm"] #lampATS{
+	  background: var(--accent);
+	  border-color: color-mix(in srgb, var(--accent) 45%, #000);
+	  position:relative;
+	  animation: atsPulse 900ms ease-in-out infinite;
+	}
+	#btnATS[data-st="alarm"] #lampATS::after{
+	  content:"";
+	  position:absolute;
+	  inset:-8px;
+	  border-radius:50%;
+	  border:2px solid var(--accent);
+	  opacity:0;
+	  animation: atsRing 900ms ease-out infinite;
+	}
+
+	@keyframes atsPulse{
+	  0%,100% { transform: scale(1);   opacity: 1; }
+	  50%     { transform: scale(1.25);opacity: .55; }
+	}
+	@keyframes atsRing{
+		0%   { transform: scale(.6); opacity: .0; }
+		20%  { opacity: .55; }
+		100% { transform: scale(1.25); opacity: .0; }
+    }
+
+      /* Іконка всередині кнопки: тільки розмір, без кольорів */
+  .ctrl-btn .icon{
+    font-size: var(--icon-font);
+    line-height: 1;
+    display: block;
+    transform: translateY(1px);
+  }
+
+  /* Кнопка-іконка: тільки розміри/падінги, вигляд бере з .ctrl-btn */
+  .ctrl-btn--icon{
+    gap: 0;
+    min-width: 56px;
+    min-height: 56px;
+    padding: 6px 10px;
+  }
+  
+
+    .indicators .ctrl-btn{
+      width:100%;
+      max-width:120px;
+      min-height:60px;
+      padding:8px 6px;
+      margin-top:10px;
+    }
+
+    /* Scenario buttons row */
+    .panel-scn .buttons{
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+      gap:var(--gap);
+      flex-wrap:nowrap;
+    }
+    .panel-scn .buttons .ctrl-btn{ flex:1 1 0; min-width:0; }
+
+  .panel-head{
+    position: relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height: 52px;      /* трохи більше, щоб кнопка не “тиснула” */
+	padding-top: 50px;
+	border-top: 0px solid rgba(0,0,0,.12);	
+    margin: 0 0 10px;
+    width: 100%;
+  }
+
+  .panel-head .section-title{ margin:0; }
+
+  .panel-head__btn{
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+
+    min-width: 52px;
+    min-height: 52px;
+    padding: 6px;
+  }
+
+    /* Planner layout */
+    .planner-layout{
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      justify-content:center;
+      gap:0;
+	}
+
+    .scheduler-row{
+      display:flex;
+      align-items:stretch;
+      gap:12px;
+	}
+    .scheduler-table{
+      flex:1 1 0;
+      min-width:0;
+      padding:clamp(8px, 2vw, 12px);
+      font-weight:700;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+  
+    @media (max-width:520px){
+      .planner-layout{ flex-direction:column; }
+    .topbar{flex-wrap:nowrap;justify-content:space-between;gap:10px;}
+    .topbar #setupTitle{flex:1 1 auto;text-align:left;min-width:0;}
+    .topbar #nowTime{width:auto;text-align:right;}
+    }
+  
+
+    /* Fault takeover mode */
+    body.fault-mode .panel > :not(.topline):not(#faultOverlay){
+      display:none !important;
+    }
+    body.fault-mode #faultOverlay{
+      display:flex !important;
+    }
+
+	/* Fault takeover mode: hide the empty settings panel container too */
+	body.fault-mode .panel.panel-settings{
+	  display: none !important;
+	}
+
+    body.fault-mode .panel-scn,
+    body.fault-mode .planner-layout{
+      display:none !important;
+    }
+  .fault-overlay{
+      position: relative;
+      padding: var(--page-pad);
+      display:none;
+    }
+    .fault-card{
+      width: min(var(--panel-max), 100%);
+      margin: 0 auto;
+      border: 1px solid var(--sep);
+      border-radius: 14px;
+      padding: clamp(12px, 3vw, 18px);
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    .fault-head{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+    .fault-dot{
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--accent);
+      margin-top: 4px;
+      position: relative;
+      flex: 0 0 auto;
+      animation: atsPulse 900ms ease-in-out infinite;
+    }
+    .fault-dot::after{
+      content:"";
+      position:absolute;
+      inset:-10px;
+      border-radius:999px;
+      border: 2px solid var(--accent);
+      opacity: 0;
+      animation: atsRing 900ms ease-out infinite;
+    }
+    .fault-title{
+      font-weight: 750;
+      letter-spacing: .2px;
+    }
+    .fault-sub{
+      margin-top: 4px;
+      opacity: .9;
+      font-size: clamp(12px, 2.6vw, 14px);
+      line-height: 1.25;
+    }
+    .fault-body{ margin-top: 14px; }
+    .fault-msg{
+      margin: 0 0 12px;
+      line-height: 1.35;
+    }
+    .fault-hint{
+      display:none;
+      margin-top: 10px;
+      font-size: clamp(12px, 2.6vw, 13px);
+      opacity: .85;
+    }
+
+    /* Make the reboot button clearly actionable in overlay */
+    #btnFaultReboot{
+      width: 100%;
+      min-height: var(--btn-h);
+      font-weight: 800;
+    }
+  .nowrap{white-space:nowrap; overflow-wrap:normal; word-break:normal;}
+  
+	/* ===== Accent-colored labels & section headings  ===== */
+	/*.lamp-label{ color: var(--accent); }*/
+	/*.section-title{ color: var(--accent); }*/
+	/* Keep header bar text using accent-ink */
+	.topbar, .topbar .section-title, .topbar #setupTitle, .topbar #nowTime{
+	  color: var(--accent-ink) !important;
+	  -webkit-text-fill-color: currentColor;
+	}
+	/* Planner column titles: ЗАПУСК / ЗУПИНКА */
+	.scheduler-table > div:first-child{
+	  color: rgba(0,0,0,.55);
+	}	
+	.scheduler-table #startDate, 
+	.scheduler-table #stopDate  
+	{ color: var(--accent); white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;}
+
+	/* stop-any icon size tweak */
+	#btnStopAnyScenario .icon{font-size:1.9em; line-height:1;}
+
+	/* Bottom Settings button: full width, icon left of text */
+	.panel-settings{ 
+		margin-top: 50px;
+		border-top: 1px solid rgba(0,0,0,.12);	}
+	#btnSettings{
+	  width: 100%;
+	  flex-direction: row;
+	  justify-content: center;
+	  align-items: center;
+	  gap: 10px;
+	  min-width: 0;
+	}
+	#btnSettings .icon{
+	  display: inline-block;
+	  flex: 0 0 auto;
+	  transform: none;
+	}
+
+	#btnStopAnyScenario,
+	#btnPlanner{
+	  width: var(--mini-btn-w);
+	  flex: 0 0 var(--mini-btn-w);
+	  min-width: var(--mini-btn-w);
+	}
+
+	/* щоб “вузька” кнопка виглядала акуратно */
+	#btnStopAnyScenario{
+	  padding-left: 0;
+	  padding-right: 0;
+	}
+
+	/* якщо у тебе контейнер кнопок сценаріїв має клас scn-buttons */
+	.scnButtons{
+	  display: grid;
+	  grid-template-columns: 1fr 1fr var(--mini-btn-w);
+	  gap: 12px;
+	  align-items: stretch;
+	}
+
+    /* Planner mini button sizing */
+    #btnPlanner{ width:var(--mini-btn-w); min-width:var(--mini-btn-w); }
+	
+	/* Center SVG icon inside Planner button (iOS-safe) */
+	#btnPlanner .icon{
+	  display:flex;
+	  align-items:center;
+	  justify-content:center;
+	  width:100%;
+	  height:100%;
+	  line-height:0;
+	  transform:none; /* прибираємо translateY(1px) тільки тут */
+	}
+
+	#btnPlanner .icon svg{
+	  display:block;  /* прибирає baseline-щілину у inline svg */
+	}	
+</style>
+</head>
+<body>
+<div class="panel">
+<div class="topline">
+<div aria-label="Setup header" class="topbar" role="group">
+<div class="section-title" id="setupTitle">Локація</div>
+<div id="nowTime">Оновлення...</div><div class="pwr-badge off" id="pwrBadge">PWR OFF</div>
+</div>
+</div>
+<!-- Fault takeover overlay (shown when avrFault=true) -->
+<div class="fault-overlay" hidden="" id="faultOverlay">
+<div aria-live="assertive" class="fault-card" role="alert">
+<div class="fault-head">
+<span aria-hidden="true" class="fault-dot"></span>
+<div class="fault-head-text">
+<div class="fault-title">АВАРІЯ</div>
+<div class="fault-msg">АВР знаходиться в стані аварії. Керування навантаженням заблоковано.</div>
+<div class="fault-sub" id="faultCountdown">Натисніть <b>ПЕРЕВАНТАЖИТИ</b> один раз і підтвердіть намір протягом 5 секунд.</div>
+</div>
+</div>
+<div class="fault-body">
+<button class="ctrl-btn" id="btnFaultReboot" type="button">ПЕРЕВАНТАЖИТИ</button>
+<div class="fault-hint" id="faultHint">Підтвердження: натисніть ще раз протягом 5 секунд.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="panel-i">
+<form action="./planner" id="postPlannerForm" method="POST" style="display:none;"></form>
+<div class="indicators">
+<div class="lamp-box">
+<div class="lamp-label">2GRID</div>
+<div aria-hidden="true" class="ctrl-btn ctrl-btn--dummy">
+<div class="lamp" id="lamp1"></div>
+<div> </div>
+</div>
+</div>
+<div class="lamp-box">
+<div class="lamp-label">GEN</div>
+<button class="ctrl-btn" id="btn1" onclick="toggleBtn(1)" type="button">
+<div class="lamp" id="lamp3"></div>
+<div id="generator-run">—</div>
+</button>
+</div>
+<div class="lamp-box">
+<div class="lamp-label">LOAD</div>
+<button class="ctrl-btn" id="btn2" onclick="toggleBtn(2)" type="button">
+<div class="lamp" id="lamp2"></div>
+<div id="load-toggle">—</div>
+</button>
+</div>
+<div class="lamp-box">
+<div class="lamp-label">AUTO</div>
+<button class="ctrl-btn" id="btn3" onclick="toggleBtn(3)" type="button">
+<div class="lamp hidden" id="lamp4"></div>
+<div id="auto-toggle">—</div>
+</button>
+</div>
+</div>
+</div>
+<div class="panel-scn">
+<div class="panel-head">
+<div class="section-title">СЦЕНАРІЇ</div>
+</div>
+<!-- Standard scenario buttons -->
+<div class="buttons" id="scnButtons">
+<button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button">START<br/><span class="nowrap">GEN &amp; LOAD</span></button>
+<button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button">STOP<br/><span class="nowrap">LOAD &amp; GEN</span></button>
+<!-- Stop any running scenario (requires confirmation, btn=7) -->
+<button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
+<span aria-hidden="true" class="icon">✖</span>
+</button>
+</div>
+<!-- Confirmation block for stopping a scenario -->
+<div class="op-confirm" id="scnConfirm" style="display:none;">
+<div class="op-text">Ви збираєтеся зупинити сценарій. <br/><br/></div>
+<div class="buttons op-buttons">
+<button class="ctrl-btn" id="btnScnConfirm" onclick="toggleBtn(7); closeStopAnyConfirm();" type="button">
+<span class="btnLine">ПІДТВЕРДИТИ (<span id="scnCountdown">5</span>)</span>
+</button>
+<button class="ctrl-btn" id="btnScnCancel" onclick="closeStopAnyConfirm();" type="button">Відмінити</button>
+</div>
+</div>
+</div>
+<div class="planner-layout">
+<div class="panel-head">
+<div class="section-title">РОЗКЛАД</div>
+</div>
+<div class="scheduler-row">
+<div class="scheduler-table">
+<div>Запуск</div>
+<div id="startDate">—</div>
+</div>
+<div class="scheduler-table">
+<div>Зупинка</div>
+<div id="stopDate">—</div>
+</div>
+<div>
+<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
+<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Settings button -->
+<div class="panel panel-settings">
+<button aria-label="Налаштування" class="ctrl-btn" id="btnSettings" onclick="location.href='/settings.html'" title="Налаштування" type="button">
+<span aria-hidden="true" class="icon">⚙</span>
+<span>Налаштування</span>
+</button>
+</div>
+<script>
+	  window.SETUP_NO = 2; // варіант сетапу
+	  window.SETUP_TITLE = "Щитова №6"; // назва сетапу
+
+	  document.getElementById('setupTitle').textContent = SETUP_TITLE;
+	  
+		// ===== Theme palettes (predefined) =====
+		// Вибрані відтінки добре читаються, а з білим текстом мають сильний контраст.
+		const THEMES = [
+		  { accent: "#C62828", ink: "#FFFFFF" }, // red
+		  { accent: "#1565C0", ink: "#FFFFFF" }, // blue
+		  { accent: "#2E7D32", ink: "#FFFFFF" }, // green
+		  { accent: "#6A1B9A", ink: "#FFFFFF" }, // purple
+		  { accent: "#EF6C00", ink: "#FFFFFF" }, // orange
+		  { accent: "#00838F", ink: "#FFFFFF" }, // teal
+		  { accent: "#AD1457", ink: "#FFFFFF" }, // magenta
+		  { accent: "#37474F", ink: "#FFFFFF" }, // blue-grey (майже чорний)
+		];
+
+		function applyThemeBySetupNo(setupNo){
+		  const idx = Math.abs((parseInt(setupNo, 10) || 0) - 1) % THEMES.length;
+		  const t = THEMES[idx];
+		  const root = document.documentElement;
+		  root.style.setProperty("--accent", t.accent);
+		  root.style.setProperty("--accent-ink", t.ink);
+		}
+
+		applyThemeBySetupNo(window.SETUP_NO);
+	  	  
+	  // ===== Helpers =====
+	  let uiLocked = false;
+	  const asBool = (v) => v === true || v === 1 || v === "1" || v === "true";
+
+	  const setText = (el, text) => {
+		if (el && el.textContent !== text) el.textContent = text;
+	  };
+
+	  const setClass = (el, cls, on) => {
+		if (!el) return;
+		el.classList.toggle(cls, !!on);
+	  };
+	  const setPwrBadge = (pwrOn) => {
+		if (!el.pwrBadge) return;
+		const on = !!pwrOn;
+		setText(el.pwrBadge, `PWR ${on ? "ON" : "OFF"}`);
+		setClass(el.pwrBadge, "on", on);
+		setClass(el.pwrBadge, "off", !on);
+	  };	  
+		function setAllControlsLocked(locked){
+			uiLocked = !!locked;
+		  const buttons = [
+			el.btn1, el.btn2, el.btn3,
+			el.btnStartScenario, el.btnStopScenario
+		  ];
+		  buttons.forEach(b => setClass(b, "inactive", locked));
+		  if (locked){
+			closeStopAnyConfirm();
+			// прибрати підсвічування active, щоб не виглядало “можна”
+			[el.btn1, el.btn2, el.btn3, el.btnStartScenario, el.btnStopScenario]
+			  .forEach(b => setClass(b, "active", false));
+		  }
+		}	  
+
+	  // ===== Cache DOM =====
+	  const el = {
+		nowTime: document.getElementById("nowTime"),
+		startDate: document.getElementById("startDate"),
+		stopDate: document.getElementById("stopDate"),
+		pwrBadge: document.getElementById("pwrBadge"),
+		btnAvrReset: document.getElementById("btnAvrReset"),
+		faultOverlay: document.getElementById("faultOverlay"),
+		btnFaultReboot: document.getElementById("btnFaultReboot"),
+		postPlannerForm: document.getElementById("postPlannerForm"),
+		faultCountdown: document.getElementById("faultCountdown"),
+		faultHint: document.getElementById("faultHint"),
+
+		btn1: document.getElementById("btn1"),
+		btn2: document.getElementById("btn2"),
+		btn3: document.getElementById("btn3"),
+
+		lamp1: document.getElementById("lamp1"),
+		lamp2: document.getElementById("lamp2"),
+		lamp3: document.getElementById("lamp3"),
+		lamp4: document.getElementById("lamp4"),
+		
+		btnStartScenario: document.getElementById("btnStartScenario"),
+		btnStopScenario:  document.getElementById("btnStopScenario"),
+
+		scnButtons: document.getElementById("scnButtons"),
+		scnConfirm: document.getElementById("scnConfirm"),
+		btnStopAnyScenario: document.getElementById("btnStopAnyScenario"),
+		btnScnConfirm: document.getElementById("btnScnConfirm"),
+		btnScnCancel: document.getElementById("btnScnCancel"),
+		scnCountdown: document.getElementById("scnCountdown"),
+		genLabel: document.getElementById("generator-run"),
+		loadLabel: document.getElementById("load-toggle"),
+		autoLabel: document.getElementById("auto-toggle"),
+	  };
+
+	  function toggleBtn(n) { fetch(`/action?btn=${n}&type=click`); }
+
+	  window.toggleBtn = toggleBtn;
+
+	  // ===== Scenario stop-any confirmation (btn=7) =====
+	  let scnConfirmUntil = 0;
+	  let scnConfirmTimer = null;
+
+	  function closeStopAnyConfirm(){
+		  scnConfirmUntil = 0;
+		  if (scnConfirmTimer){ clearInterval(scnConfirmTimer); scnConfirmTimer = null; }
+		  if (el.scnConfirm) el.scnConfirm.style.display = "none";
+		  if (el.scnButtons) el.scnButtons.style.display = "";
+	  }
+
+	  function updateScnCountdown(){
+		  if (!scnConfirmUntil || !el.scnCountdown) return;
+		  const ms = Math.max(0, scnConfirmUntil - Date.now());
+		  const sec = Math.ceil(ms/1000);
+		  el.scnCountdown.textContent = String(sec);
+	  }
+
+	  function openStopAnyConfirm(){
+		  // Do not open in fault/stale/locked modes
+		  if (uiLocked || faultMode) return;
+		  scnConfirmUntil = Date.now() + 5000;
+		  if (el.scnButtons) el.scnButtons.style.display = "none";
+		  if (el.scnConfirm) el.scnConfirm.style.display = "";
+		  updateScnCountdown();
+		  if (scnConfirmTimer) clearInterval(scnConfirmTimer);
+		  scnConfirmTimer = setInterval(() => {
+			  if (!scnConfirmUntil) return;
+			  if (Date.now() >= scnConfirmUntil){ closeStopAnyConfirm(); return; }
+			  updateScnCountdown();
+		  }, 100);
+	  }
+	  window.openStopAnyConfirm = openStopAnyConfirm;
+
+
+
+	  // ===== State =====
+	  let lastState = null;
+	  let lastStatus = null;
+	  let lastStatusAt = 0;   
+
+	  // ===== Fault takeover (avrFault) =====
+	  let faultMode = false;
+	  let rebootArmUntil = 0;
+	  let rebootTimer = null;
+
+	  function setFaultMode(on){
+		if (faultMode === on) return;
+		faultMode = on;
+		document.body.classList.toggle("fault-mode", on);
+		if (el.faultOverlay) el.faultOverlay.hidden = !on;
+
+		// In fault mode we hide the legacy reset button (if present)
+		if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
+
+		if (!on) disarmReboot();
+	  }
+
+	  function disarmReboot(){
+		rebootArmUntil = 0;
+		if (rebootTimer){ clearInterval(rebootTimer); rebootTimer = null; }
+		const b = el.btnFaultReboot;
+		if (b) b.textContent = "ПЕРЕВАНТАЖИТИ";
+		const h = el.faultHint;
+		if (h) h.style.display = "none";
+	  }
+
+	  function armReboot(){
+		rebootArmUntil = Date.now() + 5000;
+		const h = el.faultHint;
+		if (h) h.style.display = "";
+		updateRebootLabel();
+		if (rebootTimer) clearInterval(rebootTimer);
+		rebootTimer = setInterval(() => {
+			if (!faultMode) return;
+			if (Date.now() >= rebootArmUntil){ disarmReboot(); return; }
+			updateRebootLabel();
+		}, 100);
+	  }
+
+	  function updateRebootLabel(){
+		const b = el.btnFaultReboot;
+		if (!b) return;
+		const ms = Math.max(0, rebootArmUntil - Date.now());
+		const sec = Math.ceil(ms/1000);
+		b.textContent = `ПІДТВЕРДИТИ (${sec})`;
+	  }
+
+	  function postToPlanner(){
+		const f = el.postPlannerForm;
+		if (!f) return;
+		// requestSubmit is better (it triggers submit event), fallback to submit()
+		if (typeof f.requestSubmit === "function") f.requestSubmit();
+		else f.submit();
+	  }
+
+	  // Click-to-confirm within 5 seconds
+	  if (el.btnFaultReboot){
+		el.btnFaultReboot.addEventListener("click", () => {
+			if (!faultMode) return;
+			const now = Date.now();
+			if (rebootArmUntil && now < rebootArmUntil){
+				postToPlanner();
+			} else {
+				armReboot();
+			}
+		});
+	  }
+
+
+	  // ===== UI Render =====
+	  function renderButtonsFromState() {
+		if (!lastState || uiLocked) return;
+		setClass(el.btn1, "active", asBool(lastState.b0));
+
+		// LOAD: active тільки якщо мережі нема (інакше renderLoadEnable зробить inactive)
+		const gridPresent = lastStatus ? asBool(lastStatus.grid) : false;
+		setClass(el.btn2, "active", !gridPresent && asBool(lastState.b1));
+	  }
+
+	  function renderLampsFromStatus() {
+		if (!lastStatus) return;
+		setClass(el.lamp1, "on", asBool(lastStatus.grid));
+		setClass(el.lamp2, "on", asBool(lastStatus.load));
+		setClass(el.lamp3, "on", asBool(lastStatus.gen));
+		// lamp4 керується updateAutoUI()
+	  }
+
+	  function renderLabelsFromStatus() {
+		if (!lastStatus) return;
+
+		// GEN
+		setText(el.genLabel, asBool(lastStatus.gen) ? "STOP" : "START");
+
+		// LOAD
+		setText(el.loadLabel, asBool(lastStatus.load) ? "OFF" : "ON");
+	  }
+
+	  function renderGenEnable() {
+		if (!lastStatus || uiLocked) return;
+		// GEN disabled, коли є мережа і генератор не працює 
+		const gridPresent = asBool(lastStatus.grid);
+		const genRun = asBool(lastStatus.gen);
+		setClass(el.btn1, "inactive", gridPresent && !genRun);
+	  }
+	  
+		function renderLoadEnable() {
+		  if (!lastStatus || uiLocked) return;
+		  const gridPresent = asBool(lastStatus.grid);
+		  // Якщо є мережа — LOAD не клікається і не підсвічується
+		  setClass(el.btn2, "inactive", gridPresent);
+		  if (gridPresent) setClass(el.btn2, "active", false);
+		}
+		
+		function renderATSStatus(){
+			const stale = !lastStatusAt || (Date.now() - lastStatusAt > 2000);
+
+			  if (stale || !lastStatus){
+				setPwrBadge(false);
+				setFaultMode(false);
+				setAllControlsLocked(true);
+
+				// якщо btnATS/atsText є — оновимо їх, якщо ні — просто пропустимо
+				if (el.btnATS) el.btnATS.dataset.st = "nopwr";
+				if (el.atsText) setText(el.atsText, "—");
+				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
+				return;
+			  }
+
+			  const avrPwr   = asBool(lastStatus.avrPwr);
+			  setPwrBadge(avrPwr);
+
+			  const avrFault = asBool(lastStatus.avrFault);
+
+			  if (avrFault){
+				setFaultMode(true);
+				setAllControlsLocked(true);
+
+				if (el.btnATS) el.btnATS.dataset.st = "alarm";
+				if (el.atsText) setText(el.atsText, "Alarm");
+				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
+				return;
+			  }
+
+			  setFaultMode(false);
+
+			  if (!avrPwr){
+				setAllControlsLocked(true);
+
+				if (el.btnATS) el.btnATS.dataset.st = "nopwr";
+				if (el.atsText) setText(el.atsText, "NO PWR");
+				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
+				return;
+			  }
+
+			  // OK
+			  setAllControlsLocked(false);
+
+			  if (el.btnATS) el.btnATS.dataset.st = "ok";
+			  if (el.atsText) setText(el.atsText, "");
+			  if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
+		}
+
+
+		
+
+	  function updateAutoUI() {
+		  if (!el.btn3 || !el.autoLabel || uiLocked) return;
+
+		  const auto = lastStatus ? asBool(lastStatus.auto) : false;
+
+		  // якщо state ще нема — нічого не вирішуємо по b2
+		  if (!lastState) {
+			if (!auto) {
+			  setClass(el.btn3, "inactive", true);
+			  setClass(el.lamp4, "hidden", true);
+			  setClass(el.lamp4, "on", false);
+			  setText(el.autoLabel, "N/A");
+			} else {
+			  setClass(el.btn3, "inactive", false);
+			  setClass(el.lamp4, "hidden", false);
+			  setClass(el.lamp4, "on", false);
+			  setText(el.autoLabel, "manual");
+			}
+			return;
+		  }
+
+		  const b2 = asBool(lastState.b2);
+
+		// 1) auto=false => disabled, лампу видно 
+		if (!auto) {
+		  setClass(el.btn3, "inactive", true);
+		  setClass(el.lamp4, "hidden", false);
+		  setClass(el.lamp4, "on", false);
+		  setText(el.autoLabel, "N/A");
+		  return;
+		}
+
+		// 2/3) auto=true => активна
+		setClass(el.btn3, "inactive", false);
+		setClass(el.lamp4, "hidden", false);
+
+		// b2=false => чорна лампа, "УВІМКН"
+		if (!b2) {
+		  setClass(el.lamp4, "on", false);
+		  setText(el.autoLabel, "ON");
+		  return;
+		}
+
+		// b2=true => червона лампа, "ВИМКН."
+		setClass(el.lamp4, "on", true);
+		setText(el.autoLabel, "OFF");
+	  }
+
+		function renderScenarioEnable(){
+		  if (!lastStatus || uiLocked) return;
+
+		  const gridPresent = asBool(lastStatus.grid);
+		  const genRun      = asBool(lastStatus.gen);
+		  const loadOn      = asBool(lastStatus.load);
+
+		  // START GEN&LOAD: disabled якщо є мережа або генератор вже працює
+		  setClass(el.btnStartScenario, "inactive", gridPresent || genRun);
+
+		  // STOP LOAD&GEN: активна лише коли мережі нема і (LOAD або GEN увімкнені)
+		  setClass(el.btnStopScenario, "inactive", gridPresent || (!loadOn && !genRun));
+		}
+
+		function renderAll() {
+		  renderATSStatus();         
+		  renderButtonsFromState();
+		  renderLoadEnable();
+		  renderLampsFromStatus();
+		  renderLabelsFromStatus();
+		  renderGenEnable();
+		  renderScenarioEnable();
+		  updateAutoUI();
+		}
+
+
+		function noCacheFetch(url){
+		  const sep = url.includes("?") ? "&" : "?";
+		  return fetch(url + sep + "t=" + Date.now(), { cache: "no-store" });
+		}
+
+		setInterval(() => {
+		  noCacheFetch("/state")
+			.then(r => r.json())
+			.then(s => { 
+			  lastState = s;
+			  renderAll(); 
+			})
+			.catch(() => {});
+		}, 200);
+
+		setInterval(() => {
+		  noCacheFetch("/status")
+			.then(r => r.json())
+			.then(s => { 
+			  lastStatus = s;
+			  lastStatusAt = Date.now();
+			  renderAll(); 
+			})
+			.catch(() => {});
+		}, 500);
+
+	  // ===== Planner block (прибрали другий fetch /status) =====
+	  function formatDate(unix) {
+		if (!unix) return "—";
+		return new Date(unix * 1000).toLocaleString("uk-UA", {
+		  hour12: false, month: "2-digit", day: "2-digit",
+		  hour: "2-digit", minute: "2-digit"
+		});
+	  }
+	  
+		function startOfLocalDay(d){
+		  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+		}
+
+		/**
+		 * Формат для подій розкладу:
+		 * - Сьогодні о HH:MM
+		 * - Завтра о HH:MM
+		 * - Інакше: DD.MM о HH:MM (без року)
+		 *
+		 * nowUnix — бажано брати зі status.now (секунди), щоб “сьогодні/завтра” рахувались від системного часу.
+		 */
+		function formatPlanTime(unix, nowUnix){
+		  if (!unix) return "—";
+
+		  const dt = new Date(unix * 1000);
+
+		  // choose "today" reference: status.now if it's close to browser time, otherwise browser time
+		  const browserNowUnix = Math.floor(Date.now() / 1000);
+		  const refNowUnix = (nowUnix && Math.abs(nowUnix - browserNowUnix) < 12 * 3600)
+			? nowUnix
+			: browserNowUnix;
+
+		  const now = new Date(refNowUnix * 1000);
+
+		  const dayDt  = startOfLocalDay(dt).getTime();
+		  const dayNow = startOfLocalDay(now).getTime();
+		  const diffDays = Math.round((dayDt - dayNow) / 86400000);
+		  const sameYear = dt.getFullYear() === now.getFullYear();
+
+		  const timeStr = dt.toLocaleTimeString("uk-UA", { hour12:false, hour:"2-digit", minute:"2-digit" });
+
+		  if (diffDays === 0) return `Сьогодні о\u00A0${timeStr}`;
+		  if (diffDays === 1) return `Завтра о\u00A0${timeStr}`;
+
+		  const dateStr = dt.toLocaleDateString(
+			"uk-UA", sameYear ? { day:"2-digit", month:"2-digit" }                 // без року
+			: { day:"2-digit", month:"2-digit", year:"numeric" } // з роком
+	    	);
+		  return `${dateStr} о\u00A0${timeStr}`;
+		}	  
+
+	  function updatePlannerFromStatus() {
+		const s = lastStatus;
+		if (!s || !el.nowTime) return;
+
+		if (!s.timeValid || !s.now) el.nowTime.innerText = "Час недоступний";
+		else el.nowTime.innerText = formatDate(s.now);
+
+		el.startDate.innerText = "не заплановано";
+		el.stopDate.innerText  = "не заплановано";
+
+		if (s.plan) {
+		  if (s.plan.type === 1) el.stopDate.innerText = formatPlanTime(s.plan.stop, s.now);
+			if (s.plan.type === 2) {
+			  el.startDate.innerText = formatPlanTime(s.plan.start, s.now);
+			  el.stopDate.innerText  = formatPlanTime(s.plan.stop,  s.now);
+			}
+			if (s.plan.type === 3){
+			  el.startDate.innerText = formatPlanTime(s.plan.start, s.now);
+			  el.stopDate.innerText  = "ЗА МЕРЕЖЕЮ";
+			}
+		  if (s.plan.type === 4) el.stopDate.innerText = "ЗА МЕРЕЖЕЮ";
+			if (s.plan.type === 5){
+			  el.startDate.innerText = "ЗА МЕРЕЖЕЮ";
+			  el.stopDate.innerText  = formatPlanTime(s.plan.stop, s.now);
+			}
+		  if (s.plan.type === 6){
+		  el.startDate.innerText = "ЗА МЕРЕЖЕЮ";
+		  el.stopDate.innerText  = "ЗА МЕРЕЖЕЮ";  
+		  }    
+		}
+	  }
+		/*
+	  // оновлюємо planner коли приходить status + раз на хвилину як “підстраховка”
+	  setInterval(updatePlannerFromStatus, 1000); // швидко підхоплює після першого /status
+	  setTimeout(() => { clearInterval(updatePlannerFromStatus); }, 2500);
+	  setInterval(updatePlannerFromStatus, 60000);
+		Коригування логіки */
+		
+	  const fastPlannerTick = setInterval(updatePlannerFromStatus, 300);
+	  setTimeout(() => clearInterval(fastPlannerTick), 2500);
+	  setInterval(updatePlannerFromStatus, 60000);
+
+	</script></body></html>
