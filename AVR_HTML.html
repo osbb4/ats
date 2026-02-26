@@ -178,7 +178,7 @@
       margin:0 auto;
       display:block;
     }
-    .lamp.on{ background:var(--accent); border-color: color-mix(in srgb, var(--accent)45%, #000); }
+    .lamp.on{ background:var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, #000); }
 
     .lamp.hidden{ visibility:hidden; }
 
@@ -338,7 +338,6 @@
     justify-content:center;
     min-height: 52px;      /* трохи більше, щоб кнопка не “тиснула” */
 	padding-top: 50px;
-	border-top: 0px solid rgba(0,0,0,.12);	
     margin: 0 0 10px;
     width: 100%;
   }
@@ -525,16 +524,13 @@
 	}
 
 	/* якщо у тебе контейнер кнопок сценаріїв має клас scn-buttons */
-	.scnButtons{
+	#scnButtons{
 	  display: grid;
 	  grid-template-columns: 1fr 1fr var(--mini-btn-w);
 	  gap: 12px;
 	  align-items: stretch;
 	}
 
-    /* Planner mini button sizing */
-    #btnPlanner{ width:var(--mini-btn-w); min-width:var(--mini-btn-w); }
-	
 	/* Center SVG icon inside Planner button (iOS-safe) */
 	#btnPlanner .icon{
 	  display:flex;
@@ -649,7 +645,7 @@
 </div>
 <div>
 <button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
-<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
+<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
 </button>
 </div>
 </div>
@@ -730,7 +726,6 @@
 		startDate: document.getElementById("startDate"),
 		stopDate: document.getElementById("stopDate"),
 		pwrBadge: document.getElementById("pwrBadge"),
-		btnAvrReset: document.getElementById("btnAvrReset"),
 		faultOverlay: document.getElementById("faultOverlay"),
 		btnFaultReboot: document.getElementById("btnFaultReboot"),
 		postPlannerForm: document.getElementById("postPlannerForm"),
@@ -762,8 +757,7 @@
 
 	  function toggleBtn(n) { fetch(`/action?btn=${n}&type=click`); }
 
-	  window.toggleBtn = toggleBtn;
-
+	
 	  // ===== Scenario stop-any confirmation (btn=7) =====
 	  let scnConfirmUntil = 0;
 	  let scnConfirmTimer = null;
@@ -796,8 +790,7 @@
 			  updateScnCountdown();
 		  }, 100);
 	  }
-	  window.openStopAnyConfirm = openStopAnyConfirm;
-
+	
 
 
 	  // ===== State =====
@@ -817,7 +810,6 @@
 		if (el.faultOverlay) el.faultOverlay.hidden = !on;
 
 		// In fault mode we hide the legacy reset button (if present)
-		if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
 
 		if (!on) disarmReboot();
 	  }
@@ -926,10 +918,6 @@
 				setFaultMode(false);
 				setAllControlsLocked(true);
 
-				// якщо btnATS/atsText є — оновимо їх, якщо ні — просто пропустимо
-				if (el.btnATS) el.btnATS.dataset.st = "nopwr";
-				if (el.atsText) setText(el.atsText, "—");
-				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
 				return;
 			  }
 
@@ -942,9 +930,6 @@
 				setFaultMode(true);
 				setAllControlsLocked(true);
 
-				if (el.btnATS) el.btnATS.dataset.st = "alarm";
-				if (el.atsText) setText(el.atsText, "Alarm");
-				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
 				return;
 			  }
 
@@ -953,18 +938,12 @@
 			  if (!avrPwr){
 				setAllControlsLocked(true);
 
-				if (el.btnATS) el.btnATS.dataset.st = "nopwr";
-				if (el.atsText) setText(el.atsText, "NO PWR");
-				if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
 				return;
 			  }
 
 			  // OK
 			  setAllControlsLocked(false);
 
-			  if (el.btnATS) el.btnATS.dataset.st = "ok";
-			  if (el.atsText) setText(el.atsText, "");
-			  if (el.btnAvrReset) el.btnAvrReset.style.display = "none";
 		}
 
 
@@ -1125,30 +1104,30 @@
 		const s = lastStatus;
 		if (!s || !el.nowTime) return;
 
-		if (!s.timeValid || !s.now) el.nowTime.innerText = "Час недоступний";
-		else el.nowTime.innerText = formatDate(s.now);
+		if (!s.timeValid || !s.now) el.nowTime.textContent = "Час недоступний";
+		else el.nowTime.textContent = formatDate(s.now);
 
-		el.startDate.innerText = "не заплановано";
-		el.stopDate.innerText  = "не заплановано";
+		el.startDate.textContent = "не заплановано";
+		el.stopDate.textContent  = "не заплановано";
 
 		if (s.plan) {
-		  if (s.plan.type === 1) el.stopDate.innerText = formatPlanTime(s.plan.stop, s.now);
+		  if (s.plan.type === 1) el.stopDate.textContent = formatPlanTime(s.plan.stop, s.now);
 			if (s.plan.type === 2) {
-			  el.startDate.innerText = formatPlanTime(s.plan.start, s.now);
-			  el.stopDate.innerText  = formatPlanTime(s.plan.stop,  s.now);
+			  el.startDate.textContent = formatPlanTime(s.plan.start, s.now);
+			  el.stopDate.textContent  = formatPlanTime(s.plan.stop,  s.now);
 			}
 			if (s.plan.type === 3){
-			  el.startDate.innerText = formatPlanTime(s.plan.start, s.now);
-			  el.stopDate.innerText  = "ЗА МЕРЕЖЕЮ";
+			  el.startDate.textContent = formatPlanTime(s.plan.start, s.now);
+			  el.stopDate.textContent  = "ЗА МЕРЕЖЕЮ";
 			}
-		  if (s.plan.type === 4) el.stopDate.innerText = "ЗА МЕРЕЖЕЮ";
+		  if (s.plan.type === 4) el.stopDate.textContent = "ЗА МЕРЕЖЕЮ";
 			if (s.plan.type === 5){
-			  el.startDate.innerText = "ЗА МЕРЕЖЕЮ";
-			  el.stopDate.innerText  = formatPlanTime(s.plan.stop, s.now);
+			  el.startDate.textContent = "ЗА МЕРЕЖЕЮ";
+			  el.stopDate.textContent  = formatPlanTime(s.plan.stop, s.now);
 			}
 		  if (s.plan.type === 6){
-		  el.startDate.innerText = "ЗА МЕРЕЖЕЮ";
-		  el.stopDate.innerText  = "ЗА МЕРЕЖЕЮ";  
+		  el.startDate.textContent = "ЗА МЕРЕЖЕЮ";
+		  el.stopDate.textContent  = "ЗА МЕРЕЖЕЮ";  
 		  }    
 		}
 	  }
