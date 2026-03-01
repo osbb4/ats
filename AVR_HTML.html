@@ -1054,7 +1054,7 @@
 		}
 
 		setInterval(() => {
-		  noCacheFetch("/state")
+		  noCacheFetch("./state")
 			.then(r => r.json())
 			.then(s => {
 			  lastState = s;
@@ -1064,7 +1064,7 @@
 		}, 200);
 
 		setInterval(() => {
-		  noCacheFetch("/status")
+		  noCacheFetch("./status")
 			.then(r => r.json())
 			.then(s => {
 			  lastStatus = s;
