@@ -200,9 +200,9 @@
 
       min-height:var(--btn-h);
       padding:10px 12px;
-      border:1px solid #b0b0b0;
+      border:1px solid #c0c0c0;
       border-radius:12px;
-      background: #efefef;
+      background: #fff;
       box-shadow: none;
       transition: transform .06s ease, box-shadow .06s ease, filter .12s ease;
 
@@ -232,8 +232,7 @@
       pointer-events:none;
       background:#f7f7f7;
       box-shadow:none;
-      color:rgba(0,0,0,.28);
-      -webkit-text-fill-color:rgba(0,0,0,.28);
+      opacity:0.42;
     }
 
     .ctrl-btn:not(.inactive):active{
@@ -351,7 +350,7 @@
   .panel-head .section-title{
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    font-size: clamp(13px, 2.6vw, 14px);
+    font-size: clamp(10px, 2.4vw, 12px);
     font-weight: 700;
     color: rgba(0,0,0,.65);
   }
@@ -497,8 +496,8 @@
 	.scheduler-table > div:first-child{
 	  color: var(--accent);
 	  text-transform: uppercase;
-	  letter-spacing: 0.3px;
-	  font-size: clamp(13px, 2.6vw, 14px);
+	  letter-spacing: 1px;
+	  font-size: clamp(11px, 2.6vw, 13px);
 	  font-weight: 700;
 	}
 	.scheduler-table #startDate,
@@ -528,8 +527,9 @@
 
 	#btnStopAnyScenario,
 	#btnPlanner{
-	  width: 100%;
-	  min-width: 0;
+	  width: var(--mini-btn-w);
+	  flex: 0 0 var(--mini-btn-w);
+	  min-width: var(--mini-btn-w);
 	}
 
 	/* щоб "вузька" кнопка виглядала акуратно */
@@ -542,36 +542,8 @@
 	#scnButtons{
 	  display: grid;
 	  grid-template-columns: 1fr 1fr var(--mini-btn-w);
-	  column-gap: var(--gap);
-	  row-gap: 16px;
+	  gap: 12px;
 	  align-items: stretch;
-	}
-
-	.panel-scn{
-	  border:1px solid #b8b8b8;
-	  border-radius:var(--radius);
-	  padding:16px 12px;
-	}
-	.scn-col-title{
-	  font-size:clamp(12px,2.8vw,14px);
-	  font-weight:700;
-	  letter-spacing:1.2px;
-	  text-align:center;
-	  color:rgba(0,0,0,.75);
-	}
-	.scn-date{
-	  display:flex;
-	  align-items:center;
-	  justify-content:center;
-	  font-size:clamp(13px,2.6vw,14px);
-	  font-weight:700;
-	  color:var(--accent);
-	  text-align:center;
-	  padding:4px 2px;
-	  word-break:break-word;
-	}
-	.ctrl-btn--stop{
-	  border-color:rgba(0,0,0,.3);
 	}
 
 	/* Center SVG icon inside Planner button (iOS-safe) */
@@ -650,21 +622,19 @@
 </div>
 </div>
 <div class="panel-scn">
-<div id="scnButtons">
-<div class="scn-col-title">START</div>
-<div class="scn-col-title">STOP</div>
-<div></div>
-<div class="scn-date" id="startDate">—</div>
-<div class="scn-date" id="stopDate">—</div>
-<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
-<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
-</button>
-<button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button"><span class="nowrap">GEN + LOAD</span></button>
-<button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button"><span class="nowrap">LOAD + GEN</span></button>
-<button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon ctrl-btn--stop" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
+<div class="panel-head">
+<div class="section-title">СЦЕНАРІЇ</div>
+</div>
+<!-- Standard scenario buttons -->
+<div class="buttons" id="scnButtons">
+<button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button">START<br/><span class="nowrap">GEN &amp; LOAD</span></button>
+<button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button">STOP<br/><span class="nowrap">LOAD &amp; GEN</span></button>
+<!-- Stop any running scenario (requires confirmation, btn=7) -->
+<button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
 <span aria-hidden="true" class="icon">✖</span>
 </button>
 </div>
+<!-- Confirmation block for stopping a scenario -->
 <div class="op-confirm" id="scnConfirm" style="display:none;">
 <div class="op-text">Ви збираєтеся зупинити сценарій. <br/><br/></div>
 <div class="buttons op-buttons">
@@ -672,6 +642,26 @@
 <span class="btnLine">ПІДТВЕРДИТИ (<span id="scnCountdown">5</span>)</span>
 </button>
 <button class="ctrl-btn" id="btnScnCancel" onclick="closeStopAnyConfirm();" type="button">Відмінити</button>
+</div>
+</div>
+</div>
+<div class="planner-layout">
+<div class="panel-head">
+<div class="section-title">РОЗКЛАД</div>
+</div>
+<div class="scheduler-row">
+<div class="scheduler-table">
+<div>Запуск</div>
+<div id="startDate">—</div>
+</div>
+<div class="scheduler-table">
+<div>Зупинка</div>
+<div id="stopDate">—</div>
+</div>
+<div>
+<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
+<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
+</button>
 </div>
 </div>
 </div>

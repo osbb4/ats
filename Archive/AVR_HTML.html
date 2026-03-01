@@ -24,12 +24,12 @@
 
       /* Іконки (окремо від тексту) */
       --icon-font:  clamp(28px, 7vw, 40px);
-
+    
       --accent: #d11;          /* буде перезаписано з JS */
       --accent-ink: #fff;      /* колір тексту на акценті */
-
-    /* ширина "вузьких" кнопок (STOP-any та Planner). Підібрано як ~вдвічі вужче за звичайну) */
-    --mini-btn-w: 72px;
+    
+    /* ширина “вузьких” кнопок (STOP-any та Planner). Підібрано як ~вдвічі вужче за звичайну) */
+    --mini-btn-w: 72px;    
 
     }
 
@@ -57,7 +57,7 @@
     }
 
     .section-title{
-      font-weight:700;
+      font-weight:800;
       text-align:center;
       margin:0 0 10px;
     }
@@ -110,16 +110,16 @@
 	  justify-content:center;
 	  padding:4px 10px;
 	  border-radius:19px;
-	  font-size: clamp(9px, 2.2vw, 11px);
-	  font-weight:600;
-	  letter-spacing:.5px;
+	  font-size: var(--label-font);
+	  font-weight:800;
+	  letter-spacing:.3px;
 	  line-height:1;
 	  border:1px solid rgba(255,255,255,.35);
 	  background: rgba(255,255,255,.18);
 	}
 
 	.pwr-badge.off{
-	  opacity: 1;                          /* щоб було контрастно, без "вицвітання" */
+	  opacity: 1;                          /* щоб було контрастно, без “вицвітання” */
 	  background: rgba(255,255,255,.78);   /* сірий/світлий фон на акцентній полосі */
 	  color: rgba(0,0,0,.88);              /* темний текст */
 	  -webkit-text-fill-color: currentColor;
@@ -130,14 +130,14 @@
 	  opacity:1;
 	}
 	/* INDICATORS */
-
+	
 	.panel-i  {
-		border:var(--border) solid #b8b8b8;
+		border:var(--border) solid #000;
 		border-radius:var(--radius);
 		padding:10px;
 
 	}
-
+	
     .indicators{
       display:flex;
       flex-wrap:nowrap;
@@ -161,14 +161,12 @@
       display:block;
       max-width:100%;
       font-weight:700;
-      font-size: clamp(13px, 3.2vw, 15px);
+      font-size: var(--label-font);
       line-height:1.05;
       text-align:center;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      letter-spacing:0.7px;
-      color: var(--accent);
     }
 
     .lamp{
@@ -200,9 +198,9 @@
 
       min-height:var(--btn-h);
       padding:10px 12px;
-      border:1px solid #b0b0b0;
+      border:1px solid #888;
       border-radius:12px;
-      background: #efefef;
+      background: linear-gradient(#f2f2f2, #e2e2e2);
       box-shadow: none;
       transition: transform .06s ease, box-shadow .06s ease, filter .12s ease;
 
@@ -227,13 +225,11 @@
     .ctrl-btn.active{ background: var(--accent) !important; color: var(--accent-ink) !important; }
 
     .ctrl-btn.inactive{
-      border-color:#e0e0e0;
+      border-color:#ddd;
       cursor:not-allowed;
       pointer-events:none;
-      background:#f7f7f7;
+      background:#f9f9f9;
       box-shadow:none;
-      color:rgba(0,0,0,.28);
-      -webkit-text-fill-color:rgba(0,0,0,.28);
     }
 
     .ctrl-btn:not(.inactive):active{
@@ -241,11 +237,11 @@
       box-shadow: none;
       filter: brightness(.98);
     }
-
+  
   /* press-ефект для хедерних кнопок: зберігаємо translateY(-50%) */
   .panel-head__btn:not(.inactive):active{
     transform: translateY(-50%) translateY(1px);
-  }
+  }  
 
     /* dummy */
     .ctrl-btn--dummy{
@@ -315,7 +311,7 @@
     min-height: 56px;
     padding: 6px 10px;
   }
-
+  
 
     .indicators .ctrl-btn{
       width:100%;
@@ -340,21 +336,13 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height: 52px;      /* трохи більше, щоб кнопка не "тиснула" */
+    min-height: 52px;      /* трохи більше, щоб кнопка не “тиснула” */
 	padding-top: 50px;
     margin: 0 0 10px;
     width: 100%;
   }
 
   .panel-head .section-title{ margin:0; }
-
-  .panel-head .section-title{
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-size: clamp(13px, 2.6vw, 14px);
-    font-weight: 700;
-    color: rgba(0,0,0,.65);
-  }
 
   .panel-head__btn{
     position:absolute;
@@ -391,14 +379,14 @@
       align-items:center;
       gap:6px;
     }
-
+  
     @media (max-width:520px){
       .planner-layout{ flex-direction:column; }
     .topbar{flex-wrap:nowrap;justify-content:space-between;gap:10px;}
     .topbar #setupTitle{flex:1 1 auto;text-align:left;min-width:0;}
     .topbar #nowTime{width:auto;text-align:right;}
     }
-
+  
 
     /* Fault takeover mode */
     body.fault-mode .panel > :not(.topline):not(#faultOverlay){
@@ -484,7 +472,7 @@
       font-weight: 800;
     }
   .nowrap{white-space:nowrap; overflow-wrap:normal; word-break:normal;}
-
+  
 	/* ===== Accent-colored labels & section headings  ===== */
 	/*.lamp-label{ color: var(--accent); }*/
 	/*.section-title{ color: var(--accent); }*/
@@ -495,21 +483,17 @@
 	}
 	/* Planner column titles: ЗАПУСК / ЗУПИНКА */
 	.scheduler-table > div:first-child{
-	  color: var(--accent);
-	  text-transform: uppercase;
-	  letter-spacing: 0.3px;
-	  font-size: clamp(13px, 2.6vw, 14px);
-	  font-weight: 700;
-	}
-	.scheduler-table #startDate,
-	.scheduler-table #stopDate
+	  color: rgba(0,0,0,.55);
+	}	
+	.scheduler-table #startDate, 
+	.scheduler-table #stopDate  
 	{ color: var(--accent); white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;}
 
 	/* stop-any icon size tweak */
 	#btnStopAnyScenario .icon{font-size:1.9em; line-height:1;}
 
 	/* Bottom Settings button: full width, icon left of text */
-	.panel-settings{
+	.panel-settings{ 
 		margin-top: 50px;
 		border-top: 1px solid rgba(0,0,0,.12);	}
 	#btnSettings{
@@ -528,11 +512,12 @@
 
 	#btnStopAnyScenario,
 	#btnPlanner{
-	  width: 100%;
-	  min-width: 0;
+	  width: var(--mini-btn-w);
+	  flex: 0 0 var(--mini-btn-w);
+	  min-width: var(--mini-btn-w);
 	}
 
-	/* щоб "вузька" кнопка виглядала акуратно */
+	/* щоб “вузька” кнопка виглядала акуратно */
 	#btnStopAnyScenario{
 	  padding-left: 0;
 	  padding-right: 0;
@@ -542,36 +527,8 @@
 	#scnButtons{
 	  display: grid;
 	  grid-template-columns: 1fr 1fr var(--mini-btn-w);
-	  column-gap: var(--gap);
-	  row-gap: 16px;
+	  gap: 12px;
 	  align-items: stretch;
-	}
-
-	.panel-scn{
-	  border:1px solid #b8b8b8;
-	  border-radius:var(--radius);
-	  padding:16px 12px;
-	}
-	.scn-col-title{
-	  font-size:clamp(12px,2.8vw,14px);
-	  font-weight:700;
-	  letter-spacing:1.2px;
-	  text-align:center;
-	  color:rgba(0,0,0,.75);
-	}
-	.scn-date{
-	  display:flex;
-	  align-items:center;
-	  justify-content:center;
-	  font-size:clamp(13px,2.6vw,14px);
-	  font-weight:700;
-	  color:var(--accent);
-	  text-align:center;
-	  padding:4px 2px;
-	  word-break:break-word;
-	}
-	.ctrl-btn--stop{
-	  border-color:rgba(0,0,0,.3);
 	}
 
 	/* Center SVG icon inside Planner button (iOS-safe) */
@@ -587,7 +544,7 @@
 
 	#btnPlanner .icon svg{
 	  display:block;  /* прибирає baseline-щілину у inline svg */
-	}
+	}	
 </style>
 </head>
 <body>
@@ -623,7 +580,7 @@
 <div class="lamp-label">GRID</div>
 <div aria-hidden="true" class="ctrl-btn ctrl-btn--dummy">
 <div class="lamp" id="lamp1"></div>
-<div> </div>
+<div> </div>
 </div>
 </div>
 <div class="lamp-box">
@@ -650,21 +607,19 @@
 </div>
 </div>
 <div class="panel-scn">
-<div id="scnButtons">
-<div class="scn-col-title">START</div>
-<div class="scn-col-title">STOP</div>
-<div></div>
-<div class="scn-date" id="startDate">—</div>
-<div class="scn-date" id="stopDate">—</div>
-<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
-<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
-</button>
-<button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button"><span class="nowrap">GEN + LOAD</span></button>
-<button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button"><span class="nowrap">LOAD + GEN</span></button>
-<button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon ctrl-btn--stop" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
+<div class="panel-head">
+<div class="section-title">СЦЕНАРІЇ</div>
+</div>
+<!-- Standard scenario buttons -->
+<div class="buttons" id="scnButtons">
+<button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button">START<br/><span class="nowrap">GEN &amp; LOAD</span></button>
+<button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button">STOP<br/><span class="nowrap">LOAD &amp; GEN</span></button>
+<!-- Stop any running scenario (requires confirmation, btn=7) -->
+<button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
 <span aria-hidden="true" class="icon">✖</span>
 </button>
 </div>
+<!-- Confirmation block for stopping a scenario -->
 <div class="op-confirm" id="scnConfirm" style="display:none;">
 <div class="op-text">Ви збираєтеся зупинити сценарій. <br/><br/></div>
 <div class="buttons op-buttons">
@@ -672,6 +627,26 @@
 <span class="btnLine">ПІДТВЕРДИТИ (<span id="scnCountdown">5</span>)</span>
 </button>
 <button class="ctrl-btn" id="btnScnCancel" onclick="closeStopAnyConfirm();" type="button">Відмінити</button>
+</div>
+</div>
+</div>
+<div class="planner-layout">
+<div class="panel-head">
+<div class="section-title">РОЗКЛАД</div>
+</div>
+<div class="scheduler-row">
+<div class="scheduler-table">
+<div>Запуск</div>
+<div id="startDate">—</div>
+</div>
+<div class="scheduler-table">
+<div>Зупинка</div>
+<div id="stopDate">—</div>
+</div>
+<div>
+<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
+<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
+</button>
 </div>
 </div>
 </div>
@@ -687,7 +662,7 @@
 	  window.SETUP_TITLE = "Щитова №6"; // назва сетапу
 
 	  document.getElementById('setupTitle').textContent = SETUP_TITLE;
-
+	  
 		// ===== Theme palettes (predefined) =====
 		// Вибрані відтінки добре читаються, а з білим текстом мають сильний контраст.
 		const THEMES = [
@@ -710,7 +685,7 @@
 		}
 
 		applyThemeBySetupNo(window.SETUP_NO);
-
+	  	  
 	  // ===== Helpers =====
 	  let uiLocked = false;
 	  const asBool = (v) => v === true || v === 1 || v === "1" || v === "true";
@@ -729,7 +704,7 @@
 		setText(el.pwrBadge, `PWR ${on ? "ON" : "OFF"}`);
 		setClass(el.pwrBadge, "on", on);
 		setClass(el.pwrBadge, "off", !on);
-	  };
+	  };	  
 		function setAllControlsLocked(locked){
 			uiLocked = !!locked;
 		  const buttons = [
@@ -739,11 +714,11 @@
 		  buttons.forEach(b => setClass(b, "inactive", locked));
 		  if (locked){
 			closeStopAnyConfirm();
-			// прибрати підсвічування active, щоб не виглядало "можна"
+			// прибрати підсвічування active, щоб не виглядало “можна”
 			[el.btn1, el.btn2, el.btn3, el.btnStartScenario, el.btnStopScenario]
 			  .forEach(b => setClass(b, "active", false));
 		  }
-		}
+		}	  
 
 	  // ===== Cache DOM =====
 	  const el = {
@@ -765,7 +740,7 @@
 		lamp2: document.getElementById("lamp2"),
 		lamp3: document.getElementById("lamp3"),
 		lamp4: document.getElementById("lamp4"),
-
+		
 		btnStartScenario: document.getElementById("btnStartScenario"),
 		btnStopScenario:  document.getElementById("btnStopScenario"),
 
@@ -782,7 +757,7 @@
 
 	  function toggleBtn(n) { fetch(`/action?btn=${n}&type=click`); }
 
-
+	
 	  // ===== Scenario stop-any confirmation (btn=7) =====
 	  let scnConfirmUntil = 0;
 	  let scnConfirmTimer = null;
@@ -815,13 +790,13 @@
 			  updateScnCountdown();
 		  }, 100);
 	  }
-
+	
 
 
 	  // ===== State =====
 	  let lastState = null;
 	  let lastStatus = null;
-	  let lastStatusAt = 0;
+	  let lastStatusAt = 0;   
 
 	  // ===== Fault takeover (avrFault) =====
 	  let faultMode = false;
@@ -921,12 +896,12 @@
 
 	  function renderGenEnable() {
 		if (!lastStatus || uiLocked) return;
-		// GEN disabled, коли є мережа і генератор не працює
+		// GEN disabled, коли є мережа і генератор не працює 
 		const gridPresent = asBool(lastStatus.grid);
 		const genRun = asBool(lastStatus.gen);
 		setClass(el.btn1, "inactive", gridPresent && !genRun);
 	  }
-
+	  
 		function renderLoadEnable() {
 		  if (!lastStatus || uiLocked) return;
 		  const gridPresent = asBool(lastStatus.grid);
@@ -934,7 +909,7 @@
 		  setClass(el.btn2, "inactive", gridPresent);
 		  if (gridPresent) setClass(el.btn2, "active", false);
 		}
-
+		
 		function renderATSStatus(){
 			const stale = !lastStatusAt || (Date.now() - lastStatusAt > 2000);
 
@@ -972,7 +947,7 @@
 		}
 
 
-
+		
 
 	  function updateAutoUI() {
 		  if (!el.btn3 || !el.autoLabel || uiLocked) return;
@@ -997,7 +972,7 @@
 
 		  const b2 = asBool(lastState.b2);
 
-		// 1) auto=false => disabled, лампу видно
+		// 1) auto=false => disabled, лампу видно 
 		if (!auto) {
 		  setClass(el.btn3, "inactive", true);
 		  setClass(el.lamp4, "hidden", false);
@@ -1037,7 +1012,7 @@
 		}
 
 		function renderAll() {
-		  renderATSStatus();
+		  renderATSStatus();         
 		  renderButtonsFromState();
 		  renderLoadEnable();
 		  renderLampsFromStatus();
@@ -1056,9 +1031,9 @@
 		setInterval(() => {
 		  noCacheFetch("/state")
 			.then(r => r.json())
-			.then(s => {
+			.then(s => { 
 			  lastState = s;
-			  renderAll();
+			  renderAll(); 
 			})
 			.catch(() => {});
 		}, 200);
@@ -1066,10 +1041,10 @@
 		setInterval(() => {
 		  noCacheFetch("/status")
 			.then(r => r.json())
-			.then(s => {
+			.then(s => { 
 			  lastStatus = s;
 			  lastStatusAt = Date.now();
-			  renderAll();
+			  renderAll(); 
 			})
 			.catch(() => {});
 		}, 500);
@@ -1082,7 +1057,7 @@
 		  hour: "2-digit", minute: "2-digit"
 		});
 	  }
-
+	  
 		function startOfLocalDay(d){
 		  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 		}
@@ -1093,7 +1068,7 @@
 		 * - Завтра о HH:MM
 		 * - Інакше: DD.MM о HH:MM (без року)
 		 *
-		 * nowUnix — бажано брати зі status.now (секунди), щоб "сьогодні/завтра" рахувались від системного часу.
+		 * nowUnix — бажано брати зі status.now (секунди), щоб “сьогодні/завтра” рахувались від системного часу.
 		 */
 		function formatPlanTime(unix, nowUnix){
 		  if (!unix) return "—";
@@ -1123,7 +1098,7 @@
 			: { day:"2-digit", month:"2-digit", year:"numeric" } // з роком
 	    	);
 		  return `${dateStr} о\u00A0${timeStr}`;
-		}
+		}	  
 
 	  function updatePlannerFromStatus() {
 		const s = lastStatus;
@@ -1152,17 +1127,17 @@
 			}
 		  if (s.plan.type === 6){
 		  el.startDate.textContent = "ЗА МЕРЕЖЕЮ";
-		  el.stopDate.textContent  = "ЗА МЕРЕЖЕЮ";
-		  }
+		  el.stopDate.textContent  = "ЗА МЕРЕЖЕЮ";  
+		  }    
 		}
 	  }
 		/*
-	  // оновлюємо planner коли приходить status + раз на хвилину як "підстраховка"
+	  // оновлюємо planner коли приходить status + раз на хвилину як “підстраховка”
 	  setInterval(updatePlannerFromStatus, 1000); // швидко підхоплює після першого /status
 	  setTimeout(() => { clearInterval(updatePlannerFromStatus); }, 2500);
 	  setInterval(updatePlannerFromStatus, 60000);
 		Коригування логіки */
-
+		
 	  const fastPlannerTick = setInterval(updatePlannerFromStatus, 300);
 	  setTimeout(() => clearInterval(fastPlannerTick), 2500);
 	  setInterval(updatePlannerFromStatus, 60000);

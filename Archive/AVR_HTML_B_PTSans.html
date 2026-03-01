@@ -6,6 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>ATS 1</title>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
     :root{
       --panel-max: 520px;
       --page-pad: clamp(1px, 3vw, 4px);
@@ -38,7 +39,7 @@
     html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 
     body{
-      font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-family: 'PT Sans', system-ui, sans-serif;
       font-size:16px;
       background:#fff;
       padding:var(--page-pad);
@@ -200,10 +201,10 @@
 
       min-height:var(--btn-h);
       padding:10px 12px;
-      border:1px solid #b0b0b0;
+      border:1px solid #c0c0c0;
       border-radius:12px;
-      background: #efefef;
-      box-shadow: none;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.13), 0 1px 0 rgba(0,0,0,.06);
       transition: transform .06s ease, box-shadow .06s ease, filter .12s ease;
 
       font-weight:700;
@@ -563,7 +564,7 @@
 	  display:flex;
 	  align-items:center;
 	  justify-content:center;
-	  font-size:clamp(13px,2.6vw,14px);
+	  font-size:clamp(13px, 2.6vw, 14px);
 	  font-weight:700;
 	  color:var(--accent);
 	  text-align:center;
@@ -654,15 +655,15 @@
 <div class="scn-col-title">START</div>
 <div class="scn-col-title">STOP</div>
 <div></div>
-<div class="scn-date" id="startDate">—</div>
-<div class="scn-date" id="stopDate">—</div>
-<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
-<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
-</button>
 <button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button"><span class="nowrap">GEN + LOAD</span></button>
 <button class="ctrl-btn" id="btnStopScenario" onclick="toggleBtn(5)" type="button"><span class="nowrap">LOAD + GEN</span></button>
 <button aria-label="Зупинити сценарій" class="ctrl-btn ctrl-btn--icon ctrl-btn--stop" id="btnStopAnyScenario" onclick="openStopAnyConfirm()" title="Зупинити будь-який сценарій" type="button">
 <span aria-hidden="true" class="icon">✖</span>
+</button>
+<div class="scn-date" id="startDate">—</div>
+<div class="scn-date" id="stopDate">—</div>
+<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
+<span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
 </button>
 </div>
 <div class="op-confirm" id="scnConfirm" style="display:none;">

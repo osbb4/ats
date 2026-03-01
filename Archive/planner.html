@@ -54,21 +54,18 @@ input[type=date],input[type=time]{max-width:100%;min-width:0}
 @media (max-width:520px){.panel-settings{flex-direction:row;}}
 
 
-/* === Variant C === */
+/* === v8: closer to settings look (CSS-only overrides, keep button styling) === */
 .ctrl-btn{
-  border:1px solid #b0b0b0;
-  background:#efefef;
-  box-shadow:none;
+  /* keep the original "button" look, not flat white */
+  border:1px solid #888;
+  background:linear-gradient(#f2f2f2,#e2e2e2);
 }
+/* inactive stays flat and lighter */
 .ctrl-btn.inactive{
-  border-color:#e0e0e0;
-  cursor:not-allowed;
-  pointer-events:none;
-  background:#f7f7f7;
-  box-shadow:none;
-  color:rgba(0,0,0,.28);
-  -webkit-text-fill-color:rgba(0,0,0,.28);
+  border-color:#ddd;
+  background:#fff;
 }
+/* press effect like in settings */
 .ctrl-btn:not(.inactive):active{
   transform:translateY(1px);
   filter:brightness(.98);
@@ -77,25 +74,7 @@ input[type=date],input[type=time]{max-width:100%;min-width:0}
   transform:translateY(-50%) translateY(1px);
   filter:brightness(.98);
 }
-.section-title,.sub-title{
-  letter-spacing:0.3px;
-  color:rgba(0,0,0,.65);
-}
-input[type=number],input[type=date],input[type=time],input[type=text]{border-color:#c0c0c0;}
 
-
-.panel-head .section-title{
-  color:rgba(0,0,0,.88);
-  font-weight:800;
-}
-.sub-title{
-  color:var(--accent);
-  font-size:var(--btn-font);
-}
-.form-grid label{
-  font-weight:700;
-  color:rgba(0,0,0,.85);
-}
 </style>
 </head>
 <body>
@@ -103,7 +82,7 @@ input[type=number],input[type=date],input[type=time],input[type=text]{border-col
 <div class="panel-head">
 <div class="section-title">Автоматизація</div>
 <button class="ctrl-btn ctrl-btn--icon panel-head__btn" onclick="location.href='/'" type="button">
-<span aria-hidden="true" class="icon"><svg fill="none" height="28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="28"><line x1="19" x2="5" y1="12" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></span>
+<span aria-hidden="true" class="icon">↩</span>
 </button>
 </div>
 <div class="section-sep"></div>
