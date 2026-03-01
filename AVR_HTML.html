@@ -563,7 +563,7 @@
 	  display:flex;
 	  align-items:center;
 	  justify-content:center;
-	  font-size:clamp(13px,2.6vw,14px);
+	  font-size:var(--btn-font);
 	  font-weight:700;
 	  color:var(--accent);
 	  text-align:center;
@@ -656,7 +656,7 @@
 <div></div>
 <div class="scn-date" id="startDate">—</div>
 <div class="scn-date" id="stopDate">—</div>
-<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='/planner.html'" type="button">
+<button class="ctrl-btn ctrl-btn--icon" id="btnPlanner" onclick="location.href='./planner.html'" type="button">
 <span aria-hidden="true" class="icon"><svg fill="none" height="25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="25"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect> <line x1="16" x2="16" y1="2" y2="6"></line> <line x1="8" x2="8" y1="2" y2="6"></line> <line x1="3" x2="21" y1="10" y2="10"></line></svg></span>
 </button>
 <button class="ctrl-btn" id="btnStartScenario" onclick="toggleBtn(4)" type="button"><span class="nowrap">GEN + LOAD</span></button>
@@ -677,7 +677,7 @@
 </div>
 <!-- Bottom Settings button -->
 <div class="panel panel-settings">
-<button aria-label="Налаштування" class="ctrl-btn" id="btnSettings" onclick="location.href='/settings.html'" title="Налаштування" type="button">
+<button aria-label="Налаштування" class="ctrl-btn" id="btnSettings" onclick="location.href='./settings.html'" title="Налаштування" type="button">
 <span aria-hidden="true" class="icon">⚙</span>
 <span>Налаштування</span>
 </button>
@@ -740,8 +740,7 @@
 		  if (locked){
 			closeStopAnyConfirm();
 			// прибрати підсвічування active, щоб не виглядало "можна"
-			[el.btn1, el.btn2, el.btn3, el.btnStartScenario, el.btnStopScenario]
-			  .forEach(b => setClass(b, "active", false));
+			buttons.forEach(b => setClass(b, "active", false));
 		  }
 		}
 
@@ -780,7 +779,7 @@
 		autoLabel: document.getElementById("auto-toggle"),
 	  };
 
-	  function toggleBtn(n) { fetch(`/action?btn=${n}&type=click`); }
+	  function toggleBtn(n) { fetch(`/action?btn=${n}&type=click`).catch(() => {}); }
 
 
 	  // ===== Scenario stop-any confirmation (btn=7) =====
@@ -1156,12 +1155,6 @@
 		  }
 		}
 	  }
-		/*
-	  // оновлюємо planner коли приходить status + раз на хвилину як "підстраховка"
-	  setInterval(updatePlannerFromStatus, 1000); // швидко підхоплює після першого /status
-	  setTimeout(() => { clearInterval(updatePlannerFromStatus); }, 2500);
-	  setInterval(updatePlannerFromStatus, 60000);
-		Коригування логіки */
 
 	  const fastPlannerTick = setInterval(updatePlannerFromStatus, 300);
 	  setTimeout(() => clearInterval(fastPlannerTick), 2500);
